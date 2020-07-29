@@ -22,8 +22,12 @@
         android:layout_width="394dp"
         android:layout_height="506dp"
         android:layout_marginLeft="10dp"
+<<<<<<< HEAD
         android:layout_marginTop="32dp"
+=======
+>>>>>>> added record feature
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:horizontalSpacing="10dp"
         android:numColumns="5"
@@ -33,10 +37,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/recordButton">
 
     </GridView>
 
+    <RadioButton
+        android:id="@+id/recordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="8dp"
+        android:theme="@style/RadioButtonStyle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
         android:id="@+id/seekBar"

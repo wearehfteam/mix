@@ -1,20 +1,31 @@
 package com.gmail.vbloc99.mix
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaPlayer.create
+import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import java.io.IOException
 import java.lang.String
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class Play : AppCompatActivity() {
+    var mRecorder: MediaRecorder? = null
+    val REQUEST_AUDIO_PERMISSION_CODE = 1
+    var mFileName: kotlin.String? = null
+    var checked = false;
+
 
     var mp: MediaPlayer? = null
     var startTime = 0
@@ -44,7 +55,11 @@ class Play : AppCompatActivity() {
 
         val btnAdapter = ButtonAdapter(list, this)
         val gridView = findViewById<GridView>(R.id.gridView)
+        val rdb = findViewById(R.id.recordButton) as RadioButton
+
         gridView.adapter = btnAdapter
+
+        record(rdb);
 
         var position = intent.getIntExtra("position",0)
         val Mlist = intent.getStringArrayListExtra("data")
@@ -102,7 +117,6 @@ class Play : AppCompatActivity() {
                 start(position, Mlist)
             }
         }
-
 
 
     }
@@ -176,5 +190,92 @@ class Play : AppCompatActivity() {
         seekbar!!.progress = startTime
     }
 
+    fun record(rdb: RadioButton) {
+        rdb.setOnClickListener { v ->
+            run {
+                checked = !checked
+                var rdb = v as RadioButton
+                v.isChecked = checked
+
+                if (checked) {
+                    if (CheckPermissions()) {
+                        mRecorder = MediaRecorder()
+
+                        mRecorder!!.setAudioSource(MediaRecorder.AudioSource.VOICE_PERFORMANCE)
+                        mRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                        mRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+
+                        mFileName = getExternalFilesDir(null)!!.absolutePath;
+                        mFileName += "/AudioRecording" + System.currentTimeMillis().toString() + ".3gp";
+
+                        mRecorder!!.setOutputFile(mFileName);
+
+                        try {
+                            mRecorder!!.prepare()
+                        } catch (e: IOException) {
+                            Log.e("MyActivity", "prepare() failed")
+                        }
+                        mRecorder!!.start()
+
+                        Toast.makeText(
+                            applicationContext,
+                            "Recording Started",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        RequestPermissions();
+                    }
+                } else {
+                    mRecorder!!.stop();
+                    mRecorder!!.reset();
+                    mRecorder!!.release();
+                    mRecorder = null
+                    Toast.makeText(getApplicationContext(), "Recording Stopped", Toast.LENGTH_LONG)
+                        .show();
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out kotlin.String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_AUDIO_PERMISSION_CODE -> if (grantResults.size > 0) {
+                val permissionToRecord =
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+                val permissionToStore =
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED
+                if (permissionToRecord && permissionToStore) {
+                    Toast.makeText(applicationContext, "Permission Granted", Toast.LENGTH_LONG)
+                        .show()
+                } else {
+                    Toast.makeText(applicationContext, "Permission Denied", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
+    }
+
+    fun CheckPermissions(): Boolean {
+        val result = ContextCompat.checkSelfPermission(
+            applicationContext,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val result1 =
+            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.RECORD_AUDIO)
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun RequestPermissions() {
+        ActivityCompat.requestPermissions(
+            this@Play,
+            arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            REQUEST_AUDIO_PERMISSION_CODE
+        )
+    }
 }
 
