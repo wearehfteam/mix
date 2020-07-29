@@ -175,12 +175,15 @@ class Play : AppCompatActivity() {
 
     private val UpdateSongTime: Runnable = object : Runnable {
         override fun run() {
-            val startTime = mp!!.currentPosition
-            seekbar!!.progress = startTime
-            myHandler.postDelayed(this, 100)
-            if (startTime == finalTime){
-                pause!!.setImageResource(R.drawable.play)
+            if (mp != null){
+                val startTime = mp!!.currentPosition
+                seekbar!!.progress = startTime
+                myHandler.postDelayed(this, 100)
+                if (startTime == finalTime){
+                    pause!!.setImageResource(R.drawable.play)
+                }
             }
+
         }
     }
 
