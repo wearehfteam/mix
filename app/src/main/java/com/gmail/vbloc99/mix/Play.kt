@@ -6,12 +6,13 @@ import android.media.MediaPlayer.create
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.widget.*
+import android.widget.GridView
+import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.lang.String
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class Play : AppCompatActivity() {
@@ -20,6 +21,8 @@ class Play : AppCompatActivity() {
     var startTime = 0
     var finalTime = 0
     var seekbar: SeekBar? = null
+    var maxVolume = 100
+    var sbVolume: SeekBar? = null
     var oneTimeOnly = 0
     var myHandler: Handler = Handler()
     var pause: ImageView? = null
@@ -67,6 +70,23 @@ class Play : AppCompatActivity() {
             }
 
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                seekBar.progress = progress
+            }
+        })
+
+        sbVolume!!.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                val log1 = (progress.toDouble()/maxVolume.toDouble()).toFloat()
+
+                mp!!.setVolume(log1, log1) //set volume takes two paramater
                 seekBar.progress = progress
             }
         })
@@ -160,12 +180,16 @@ class Play : AppCompatActivity() {
         startTime = mp!!.currentPosition
 
         seekbar = findViewById(R.id.seekBar)
+        sbVolume = findViewById(R.id.sbVolume)
 
         if (oneTimeOnly == 0) {
             seekbar!!.max = finalTime
             oneTimeOnly = 1
         }
         seekbar!!.progress = startTime
+
+        sbVolume!!.max = maxVolume
+        sbVolume!!.progress = maxVolume
     }
 
 }
