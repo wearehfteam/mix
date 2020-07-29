@@ -12,12 +12,11 @@ import android.util.Log
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
+
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.IOException
-import java.lang.String
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class Play : AppCompatActivity() {
@@ -28,9 +27,10 @@ class Play : AppCompatActivity() {
 
 
     var mp: MediaPlayer? = null
-    var startTime = 0
     var finalTime = 0
     var seekbar: SeekBar? = null
+    var maxVolume = 100
+    var sbVolume: SeekBar? = null
     var oneTimeOnly = 0
     var myHandler: Handler = Handler()
     var pause: ImageView? = null
@@ -76,6 +76,7 @@ class Play : AppCompatActivity() {
         seekbar!!.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 mp!!.seekTo(seekBar.progress)
+                pause!!.setImageResource(R.drawable.pause)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -83,6 +84,23 @@ class Play : AppCompatActivity() {
             }
 
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                seekBar.progress = progress
+            }
+        })
+
+        sbVolume!!.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                val log1 = (progress.toDouble()/maxVolume.toDouble()).toFloat()
+
+                mp!!.setVolume(log1, log1) //set volume takes two paramater
                 seekBar.progress = progress
             }
         })
@@ -157,9 +175,12 @@ class Play : AppCompatActivity() {
 
     private val UpdateSongTime: Runnable = object : Runnable {
         override fun run() {
-            startTime = mp!!.currentPosition
+            val startTime = mp!!.currentPosition
             seekbar!!.progress = startTime
             myHandler.postDelayed(this, 100)
+            if (startTime == finalTime){
+                pause!!.setImageResource(R.drawable.play)
+            }
         }
     }
 
@@ -179,15 +200,18 @@ class Play : AppCompatActivity() {
     }
     fun initSeekbar() {
         finalTime = mp!!.duration
-        startTime = mp!!.currentPosition
 
         seekbar = findViewById(R.id.seekBar)
+        sbVolume = findViewById(R.id.sbVolume)
 
         if (oneTimeOnly == 0) {
             seekbar!!.max = finalTime
             oneTimeOnly = 1
         }
-        seekbar!!.progress = startTime
+        seekbar!!.progress = 0
+
+        sbVolume!!.max = maxVolume
+        sbVolume!!.progress = maxVolume
     }
 
     fun record(rdb: RadioButton) {

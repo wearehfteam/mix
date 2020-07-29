@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/app"
     tools:context=".Play">
 
     <TextView
@@ -22,10 +23,7 @@
         android:layout_width="394dp"
         android:layout_height="506dp"
         android:layout_marginLeft="10dp"
-<<<<<<< HEAD
         android:layout_marginTop="32dp"
-=======
->>>>>>> added record feature
         android:layout_marginRight="10dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
@@ -76,7 +74,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnNext"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnPrevious"
@@ -88,7 +85,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnPause"
@@ -100,11 +96,22 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnPause"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBar"
         tools:srcCompat="@android:drawable/ic_media_pause" />
 
+    <SeekBar
+        android:id="@+id/sbVolume"
+        android:layout_width="350dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnPause" />
 </androidx.constraintlayout.widget.ConstraintLayout>
