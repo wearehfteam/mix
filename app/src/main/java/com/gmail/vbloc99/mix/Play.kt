@@ -25,6 +25,7 @@ class Play : AppCompatActivity() {
     var pause: ImageView? = null
     var next: ImageView? = null
     var previous: ImageView? = null
+    var listSong: ImageView? = null
     var nameSong: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +76,11 @@ class Play : AppCompatActivity() {
         nameSong = findViewById(R.id.song)
         nameSong!!.text = Mlist!!.get(position)
         initControlButton()
+
+        listSong!!.setOnClickListener {
+            ListSong()
+        }
+
         pause!!.setOnClickListener {
             pause()
         }
@@ -129,11 +135,10 @@ class Play : AppCompatActivity() {
         mp!!.setVolume(10.toFloat(),10.toFloat())
     }
 
-    override fun onBackPressed() {
+    fun ListSong() {
         stop()
         val intent = Intent(this, MainActivity::class.java)
         this.startActivity(intent)
-        return
     }
 
     private val UpdateSongTime: Runnable = object : Runnable {
@@ -145,6 +150,9 @@ class Play : AppCompatActivity() {
     }
 
     fun initControlButton() {
+        listSong = findViewById(R.id.btnListSong)
+        listSong!!.setImageResource(R.drawable.list_song)
+
         pause = findViewById(R.id.btnPause)
         pause!!.setImageResource(R.drawable.pause)
 
